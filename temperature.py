@@ -25,12 +25,18 @@ url = "https://api.forecast.io/forecast/" + apiKey + "/"
 
 # Latitude and longitude coordinates of (five) selected cities
 cities = {
-	"Grand Rapids": ["42.963360", "-85.668086"]
-	"Jakarta": ["-6.173260", "106.822815"]
-	"Los Angeles": ["34.019394", "-118.410825"]
-	"Salt Lake City": ["40.778996", "-111.932630"]
+	"Grand Rapids": ["42.963360", "-85.668086"],
+	"Jakarta": ["-6.173260", "106.822815"],
+	"Los Angeles": ["34.019394", "-118.410825"],
+	"Salt Lake City": ["40.778996", "-111.932630"],
 	"Seattle": ["47.620499", "-122.350876"]
 }
+
+# Duration of data pull from today to number of days prior
+startDate = datetime.datetime.now()
+# Change format from datetime.datetime(YYYY, MM, DD, HH, MM, SS, TTTTT) to datetime.datetime(YYYY, MM, DD, 0, 0)
+startDate = datetime.datetime.combine(startDate.date(), datetime.time(0)) 
+startDate = startDate - datetime.timedelta(days=30)
 
 # ----------------
 # STORE DATA
