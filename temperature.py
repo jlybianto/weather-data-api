@@ -41,3 +41,11 @@ startDate = startDate - datetime.timedelta(days=30)
 # ----------------
 # STORE DATA
 # ----------------
+
+# Connect to the database. The "connect()" method returns a connection object.
+con = lite.connect("weather.db")
+cur = con.cursor()
+
+# Drop currently existing tables.
+with con:
+	cur.execute("DROP TABLE IF EXISTS daily_temp")
