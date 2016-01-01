@@ -51,12 +51,18 @@ with con:
 	cur.execute("DROP TABLE IF EXISTS maxTemp")
 
 # Create the table specifying the name of columns and their data types.
-# First column wold be date (DATE type).
+# First column wold be one month's worth of sequential dates (DATE type).
 date = []
 date.append(startDate)
 for t in range(30):
 	date.append(date[-1] + datetime.timedelta(days=1))
-date = [(t.strftime("%Y/%m/%d")) for t in date]
+# Modify list into a tuple for SQL executemany() capability
+date = [(t.strftime("%Y/%m/%d"),) for t in date]
 
 # Remaining columns are the five selected cities (NUMERIC type).
 cityId = [i + " NUMERIC" for i in cities.keys()]
+
+# Construct the table and add the sequential dates.
+with con:
+	cur.execute("CREATE TABLE maxTemp (Date INT, " + ", ".join(cityId) + ");")
+	cur.executemany("INSERT INTO maxTemp (Date) VALUES (?)", date)
