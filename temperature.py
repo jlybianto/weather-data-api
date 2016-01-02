@@ -57,12 +57,28 @@ date.append(startDate)
 for t in range(30):
 	date.append(date[-1] + datetime.timedelta(days=1))
 # Modify list into a tuple for SQL executemany() capability
-date = [(t.strftime("%Y/%m/%d"),) for t in date]
+dateTuple = [(t.strftime("%Y/%m/%d"),) for t in date]
 
 # Remaining columns are the five selected cities (NUMERIC type).
-cityId = [i + " NUMERIC" for i in cities.keys()]
+# Truncate city names with spaces (ie. "Los Angeles" to "LosAngeles") for SQL convenience.
+citiesTruncated = {key.replace(" ", ""): value for key, value in cities.iteritems()}
+cityId = [c + " NUMERIC" for c in citiesTruncated]
 
 # Construct the table and add the sequential dates.
 with con:
 	cur.execute("CREATE TABLE maxTemp (Date INT, " + ", ".join(cityId) + ");")
-	cur.executemany("INSERT INTO maxTemp (Date) VALUES (?)", date)
+	cur.executemany("INSERT INTO maxTemp (Date) VALUES (?)", dateTuple)
+
+# Add maximum temperature data for each specified city and for each day.
+# Forecast at a Given Time (https://developer.forecast.io/docs/v2#time_call)
+# Format should be a string as follows: [YYYY]-[MM]-[DD]T[HH]:[MM]:[SS]
+for c in citiesTruncated:
+	for t in range(30):
+		apiRetrieve = url + citiesTruncated[c][0] + "," + citiesTruncated[c][1] + "," + date[t].strftime("%Y-%m-%dT%H:%M:%S")
+		r = requests.get(apiRetrieve)
+		Tmax = float(json_normalize(r.json()["daily"]["data"])["temperatureMax"])
+
+		# Use UPDATE query to store retrieved values
+		with con:
+			cur.execute("UPDATE maxtemp SET " + c + " = " + str(Tmax) + \
+			" WHERE Date = " + date[t].strftime("'%Y/%m/%d'") + ";")
