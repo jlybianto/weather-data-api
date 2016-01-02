@@ -54,7 +54,7 @@ with con:
 # First column wold be one month's worth of sequential dates (DATE type).
 date = []
 date.append(startDate)
-for t in range(30):
+for t in range(29):
 	date.append(date[-1] + datetime.timedelta(days=1))
 # Modify list into a tuple for SQL executemany() capability
 dateTuple = [(t.strftime("%Y/%m/%d"),) for t in date]
