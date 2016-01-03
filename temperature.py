@@ -82,3 +82,15 @@ for c in citiesTruncated:
 		with con:
 			cur.execute("UPDATE maxtemp SET " + c + " = " + str(Tmax) + \
 			" WHERE Date = " + date[t].strftime("'%Y/%m/%d'") + ";")
+
+# ----------------
+# ANALYZE DATA
+# ----------------
+
+# Analyze the average maximum temperature of each city during the specified period of time.
+
+# ----------------
+# VISUALIZE DATA
+# ----------------
+
+# Add plot, scatter plot (with fitted spline) and test auto-correlation if necessary.
