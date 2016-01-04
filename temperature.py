@@ -88,6 +88,7 @@ for c in citiesTruncated:
 # ----------------
 
 # Analyze the average maximum temperature of each city during the specified period of time.
+df = pd.read_sql_query("SELECT * FROM maxTemp ORDER BY Date", con, index_col="Date")
 
 # ----------------
 # VISUALIZE DATA
