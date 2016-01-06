@@ -61,7 +61,7 @@ dateTuple = [(t.strftime("%Y/%m/%d"),) for t in date]
 
 # Remaining columns are the five selected cities (NUMERIC type).
 # Truncate city names with spaces (ie. "Los Angeles" to "LosAngeles") for SQL convenience.
-citiesTruncated = {key.replace(" ", ""): value for key, value in cities.iteritems()}
+citiesTruncated = {key.replace(" ", "_"): value for key, value in cities.iteritems()}
 cityId = [c + " NUMERIC" for c in citiesTruncated]
 
 # Construct the table and add the sequential dates.
