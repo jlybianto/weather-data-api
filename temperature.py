@@ -7,12 +7,16 @@
 # The datetime package has datetime objects.
 # The pandas package is used to fetch and store data in a DataFrame.
 # The json_normalize package is to convert data into a pandas DataFrame from a JSON format.
+# The collections module implements specialized container data types.
+# The matplotlib package is for graphical outputs (eg. box-plot, histogram, QQ-plot).
 
 import requests
 import sqlite3 as lite
 import datetime
 import pandas as pd
 from pandas.io.json import json_normalize
+import collections
+import matplotlib.pyplot as plt
 
 # ----------------
 # OBTAIN DATA
