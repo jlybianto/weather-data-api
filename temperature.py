@@ -91,8 +91,28 @@ for c in citiesTruncated:
 # ANALYZE DATA
 # ----------------
 
-# Analyze the average maximum temperature of each city during the specified period of time.
+# Load collected data into a DataFrame
 df = pd.read_sql_query("SELECT * FROM maxTemp ORDER BY Date", con, index_col="Date")
+
+# Determine the city with the highest amount of temperature shift from a day-to-day basis.
+tempShift = collections.defaultdict(int)
+# Loop over each city column
+for col in df.columns:
+	# List the values of every temperature data collected for each city column.
+	tempList = df[col].tolist()
+	# Starting point of zero change and create loop to compare each day's temperature.
+	tempShift[col] = 0
+	for t in range(len(tempList) - 1):
+		tempChange = abs(tempList[t] - tempList[t + 1])
+		# If the absolute value of temperature shift is greater than current value, replace the current value.
+		if tempChange > tempShift[col]:
+			tempShift[col] = tempChange
+# To determine the city key with the highest temperature shift.
+tempShiftMax = max(tempShift, key=tempShift.get)
+print("The city with the largest day-to-day maximum temperature shift is " 
+	+ tempShiftMax.replace("_", " ") + " with a change of " + str(tempShift[tempShiftMax])
+	+ " degrees."
+)
 
 # ----------------
 # VISUALIZE DATA
