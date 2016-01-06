@@ -94,7 +94,21 @@ for c in citiesTruncated:
 # Load collected data into a DataFrame
 df = pd.read_sql_query("SELECT * FROM maxTemp ORDER BY Date", con, index_col="Date")
 
+# Determine the average maximum temperature and standard deviation (variation) of each city.
+print("")
+tempMaxAve = collections.defaultdict(int)
+tempMaxStd = collections.defaultdict(int)
+# Loop over each city column
+for col in df.columns:
+	tempMaxAve[col] = df[col].mean()
+	tempMaxStd[col] = df[col].std()
+	print(col.replace("_", " ") + " has an average maximum temperature of "
+		+ str(round(tempMaxAve[col], 2)) + " degrees Fahrenheit and varies within standard deviation of "
+		+ str(round(tempMaxStd[col], 2)) + "."
+		)
+
 # Determine the city with the highest amount of temperature shift from a day-to-day basis.
+print("")
 tempShift = collections.defaultdict(int)
 # Loop over each city column
 for col in df.columns:
@@ -110,7 +124,7 @@ for col in df.columns:
 # To determine the city key with the highest temperature shift.
 tempShiftMax = max(tempShift, key=tempShift.get)
 print("The city with the largest day-to-day maximum temperature shift is " 
-	+ tempShiftMax.replace("_", " ") + " with a change of " + str(tempShift[tempShiftMax])
+	+ tempShiftMax.replace("_", " ") + " with a change of " + str(round(tempShift[tempShiftMax], 2))
 	+ " degrees."
 )
 
