@@ -93,6 +93,8 @@ for c in citiesTruncated:
 
 # Load collected data into a DataFrame
 df = pd.read_sql_query("SELECT * FROM maxTemp ORDER BY Date", con, index_col="Date")
+# Update truncated city names
+df.columns = [col.replace("_", " ") for col in df.columns]
 
 # Determine the average maximum temperature and standard deviation (variation) of each city.
 print("")
@@ -102,7 +104,7 @@ tempMaxStd = collections.defaultdict(int)
 for col in df.columns:
 	tempMaxAve[col] = df[col].mean()
 	tempMaxStd[col] = df[col].std()
-	print(col.replace("_", " ") + " has an average maximum temperature of "
+	print(col + " has an average maximum temperature of "
 		+ str(round(tempMaxAve[col], 2)) + " degrees Fahrenheit and varies within standard deviation of "
 		+ str(round(tempMaxStd[col], 2)) + "."
 		)
@@ -124,7 +126,7 @@ for col in df.columns:
 # To determine the city key with the highest temperature shift.
 tempShiftMax = max(tempShift, key=tempShift.get)
 print("The city with the largest day-to-day maximum temperature shift is " 
-	+ tempShiftMax.replace("_", " ") + " with a change of " + str(round(tempShift[tempShiftMax], 2))
+	+ tempShiftMax + " with a change of " + str(round(tempShift[tempShiftMax], 2))
 	+ " degrees."
 )
 
@@ -133,3 +135,11 @@ print("The city with the largest day-to-day maximum temperature shift is "
 # ----------------
 
 # Add plot, scatter plot (with fitted spline) and test auto-correlation if necessary.
+plt.figure(figsize=(30, 15))
+df.plot(colormap='Paired', fontsize=8)
+plt.gca().grid(True)
+plt.legend(loc="lower left", fontsize=8)
+plt.xlabel("Date", fontsize=12)
+plt.ylabel("Fahrenheit", fontsize=12)
+plt.title("Daily maximum temperature readings from " + str(df.index[0]) + " to " + str(df.index[29]), fontsize=12)
+plt.savefig("maxtemp_time.png")
